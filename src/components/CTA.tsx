@@ -28,7 +28,7 @@ export default function CTA() {
 
         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
           <button onClick={handleClick} className="group w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-white text-purple-700 rounded-xl font-semibold text-base hover:bg-purple-50 transition-all shadow-2xl hover:shadow-3xl hover:scale-105 flex items-center justify-center gap-2" translate="no">
-            Fazer Cadastro Gratuito
+            Cadastre-se como paciente
             <ArrowRight className="w-4 md:w-5 h-4 md:h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           <button onClick={handleClick} className="w-full sm:w-auto px-4 md:px-8 py-3 md:py-4 bg-transparent text-white border-2 border-white rounded-xl font-semibold text-sm md:text-base hover:bg-white/10 transition-all whitespace-nowrap" translate="no">
@@ -37,7 +37,7 @@ export default function CTA() {
         </div>
 
         <p className="mt-5 md:mt-6 text-purple-100 text-xs px-4" translate="no">
-          Comece em minutos
+          Gratuito para pacientes. Profissionais pagam taxa de adesão
         </p>
       </div>
     </section>
