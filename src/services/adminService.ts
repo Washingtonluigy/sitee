@@ -283,9 +283,10 @@ export const updateContactInfo = async (info: Partial<ContactInfo>) => {
     return insertData as ContactInfo;
   }
 
+  const { id: _, ...updateData } = info;
   const { data, error } = await supabase
     .from('contact_info')
-    .update({ ...info, updated_at: new Date().toISOString() })
+    .update({ ...updateData, updated_at: new Date().toISOString() })
     .eq('id', existingData.id)
     .select()
     .single();
