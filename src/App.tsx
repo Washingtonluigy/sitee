@@ -5,6 +5,7 @@ import SocialProof from './components/SocialProof';
 import CTA from './components/CTA';
 import Footer from './components/Footer';
 import AdminPanel from './pages/AdminPanel';
+import WhatsAppButton from './components/WhatsAppButton';
 
 function HomePage() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
+      <WhatsAppButton />
     </Router>
   );
 }
