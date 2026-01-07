@@ -31,13 +31,13 @@ export default function CTA() {
             Fazer Cadastro Gratuito
             <ArrowRight className="w-4 md:w-5 h-4 md:h-5 group-hover:translate-x-1 transition-transform" />
           </button>
-          <button onClick={handleClick} className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-transparent text-white border-2 border-white rounded-xl font-semibold text-base hover:bg-white/10 transition-all">
+          <button onClick={handleClick} className="w-full sm:w-auto px-4 md:px-8 py-3 md:py-4 bg-transparent text-white border-2 border-white rounded-xl font-semibold text-sm md:text-base hover:bg-white/10 transition-all whitespace-nowrap">
             Para Profissionais
           </button>
         </div>
 
         <p className="mt-5 md:mt-6 text-purple-100 text-xs px-4">
-          Sem taxas ocultas • Comece em minutos
+          Comece em minutos
         </p>
       </div>
     </section>
