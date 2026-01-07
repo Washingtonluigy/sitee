@@ -57,7 +57,8 @@ export default function Hero() {
       </div>
 
       <nav className="absolute top-0 left-0 right-0 z-20 px-4 md:px-6 py-4 md:py-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-end">
+        <div className="max-w-7xl mx-auto flex items-center justify-between md:justify-end">
+          <div className="w-32 md:w-48"></div>
           <button onClick={handleNavClick} className="px-4 md:px-6 py-2 md:py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm md:text-base hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/20 hover:shadow-xl hover:shadow-purple-600/30">
             {config?.button_primary_text || 'Começar Agora'}
           </button>
