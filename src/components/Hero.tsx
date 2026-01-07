@@ -59,7 +59,7 @@ export default function Hero() {
       <nav className="absolute top-0 left-0 right-0 z-20 px-4 md:px-6 py-4 md:py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between md:justify-end">
           <div className="w-32 md:w-48"></div>
-          <button onClick={handleNavClick} className="px-4 md:px-6 py-2 md:py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm md:text-base hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/20 hover:shadow-xl hover:shadow-purple-600/30">
+          <button onClick={handleNavClick} className="px-4 md:px-6 py-2 md:py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm md:text-base hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/20 hover:shadow-xl hover:shadow-purple-600/30" translate="no">
             {config?.button_primary_text || 'Começar Agora'}
           </button>
         </div>
@@ -70,7 +70,7 @@ export default function Hero() {
 
         <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full mb-6 md:mb-8 shadow-lg">
           <Activity className="w-4 h-4 text-purple-600 animate-pulse" />
-          <span className="text-sm font-medium text-gray-700">Conectando você aos melhores profissionais de saúde</span>
+          <span className="text-sm font-medium text-gray-700" translate="no">Conectando você aos melhores profissionais de saúde</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight" translate="no">
@@ -80,16 +80,16 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed px-4">
+        <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed px-4" translate="no">
           {config?.hero_description || 'A Amah conecta você com profissionais qualificados de diversas áreas da saúde de forma rápida e segura.'}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center px-4">
-          <button onClick={handleNavClick} className="group w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-purple-600 text-white rounded-xl font-semibold text-base md:text-lg hover:bg-purple-700 transition-all shadow-xl shadow-purple-600/30 hover:shadow-2xl hover:shadow-purple-600/40 hover:scale-105">
+          <button onClick={handleNavClick} className="group w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-purple-600 text-white rounded-xl font-semibold text-base md:text-lg hover:bg-purple-700 transition-all shadow-xl shadow-purple-600/30 hover:shadow-2xl hover:shadow-purple-600/40 hover:scale-105" translate="no">
             {config?.button_primary_text || 'Começar Agora'}
             <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
           </button>
-          <button onClick={handleSecondaryClick} className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-white text-purple-600 rounded-xl font-semibold text-base md:text-lg hover:bg-purple-50 transition-all shadow-xl hover:shadow-2xl border-2 border-purple-600">
+          <button onClick={handleSecondaryClick} className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-white text-purple-600 rounded-xl font-semibold text-base md:text-lg hover:bg-purple-50 transition-all shadow-xl hover:shadow-2xl border-2 border-purple-600" translate="no">
             {config?.button_secondary_text || 'Sou Profissional'}
           </button>
         </div>

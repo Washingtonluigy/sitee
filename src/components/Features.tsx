@@ -28,7 +28,7 @@ export default function Features() {
     <section className="py-12 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="text-center mb-10 md:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-3" translate="no">
             Por que escolher a Amah?
           </h2>
         </div>
@@ -44,10 +44,10 @@ export default function Features() {
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/20">
                   <Icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">
+                <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2" translate="no">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed" translate="no">
                   {feature.description}
                 </p>
               </div>
