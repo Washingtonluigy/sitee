@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 export interface SiteConfig {
   id: string;
@@ -37,6 +37,8 @@ export interface Testimonial {
 }
 
 export const getSiteConfig = async () => {
+  if (!isSupabaseConfigured || !supabase) return null;
+
   const { data, error } = await supabase
     .from('site_config')
     .select('*')
@@ -47,6 +49,8 @@ export const getSiteConfig = async () => {
 };
 
 export const updateSiteConfig = async (config: Partial<SiteConfig>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
   const { data, error } = await supabase
     .from('site_config')
     .update({ ...config, updated_at: new Date().toISOString() })
@@ -59,6 +63,8 @@ export const updateSiteConfig = async (config: Partial<SiteConfig>) => {
 };
 
 export const getVideos = async () => {
+  if (!isSupabaseConfigured || !supabase) return [];
+
   const { data, error } = await supabase
     .from('videos')
     .select('*')
@@ -69,6 +75,8 @@ export const getVideos = async () => {
 };
 
 export const addVideo = async (video: Omit<Video, 'id' | 'created_at' | 'updated_at'>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
   const { data, error } = await supabase
     .from('videos')
     .insert([video])
@@ -80,6 +88,8 @@ export const addVideo = async (video: Omit<Video, 'id' | 'created_at' | 'updated
 };
 
 export const updateVideo = async (id: string, video: Partial<Video>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
   const { data, error } = await supabase
     .from('videos')
     .update({ ...video, updated_at: new Date().toISOString() })
@@ -92,6 +102,8 @@ export const updateVideo = async (id: string, video: Partial<Video>) => {
 };
 
 export const deleteVideo = async (id: string) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
   const { error } = await supabase
     .from('videos')
     .delete()
@@ -101,6 +113,8 @@ export const deleteVideo = async (id: string) => {
 };
 
 export const getTestimonials = async () => {
+  if (!isSupabaseConfigured || !supabase) return [];
+
   const { data, error } = await supabase
     .from('testimonials')
     .select('*')
@@ -112,6 +126,8 @@ export const getTestimonials = async () => {
 };
 
 export const getAllTestimonials = async () => {
+  if (!isSupabaseConfigured || !supabase) return [];
+
   const { data, error } = await supabase
     .from('testimonials')
     .select('*')
@@ -122,6 +138,8 @@ export const getAllTestimonials = async () => {
 };
 
 export const addTestimonial = async (testimonial: Omit<Testimonial, 'id' | 'created_at' | 'updated_at'>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
   const { data, error } = await supabase
     .from('testimonials')
     .insert([testimonial])
@@ -133,6 +151,8 @@ export const addTestimonial = async (testimonial: Omit<Testimonial, 'id' | 'crea
 };
 
 export const updateTestimonial = async (id: string, testimonial: Partial<Testimonial>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
   const { data, error } = await supabase
     .from('testimonials')
     .update({ ...testimonial, updated_at: new Date().toISOString() })
@@ -145,6 +165,8 @@ export const updateTestimonial = async (id: string, testimonial: Partial<Testimo
 };
 
 export const deleteTestimonial = async (id: string) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
   const { error } = await supabase
     .from('testimonials')
     .delete()
