@@ -58,7 +58,19 @@ export default function AdminPanel() {
       setVideos(videosData);
       setTestimonials(testimonialsData);
       setFooterLinks(footerLinksData);
-      setContactInfo(contactInfoData);
+      setContactInfo(contactInfoData || {
+        id: '',
+        email: 'contato@amah.com.br',
+        phone: '(11) 4000-0000',
+        address: '',
+        city: 'São Paulo',
+        state: 'SP',
+        country: 'Brasil',
+        terms_url: 'https://amah-sistema-de-saude.netlify.app',
+        privacy_url: 'https://amah-sistema-de-saude.netlify.app',
+        cookies_url: 'https://amah-sistema-de-saude.netlify.app',
+        updated_at: new Date().toISOString()
+      });
     } catch (error) {
       showMessage('Erro ao carregar dados', 'error');
     }
@@ -208,9 +220,11 @@ export default function AdminPanel() {
     if (!contactInfo) return;
     setLoading(true);
     try {
-      await updateContactInfo(contactInfo);
+      const updatedInfo = await updateContactInfo(contactInfo);
+      setContactInfo(updatedInfo);
       showMessage('Informações de contato salvas com sucesso!');
     } catch (error) {
+      console.error('Erro ao salvar:', error);
       showMessage('Erro ao salvar informações de contato', 'error');
     } finally {
       setLoading(false);

@@ -266,13 +266,25 @@ export const getContactInfo = async () => {
 export const updateContactInfo = async (info: Partial<ContactInfo>) => {
   if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
 
+  if (!info.id) {
+    const { data: insertData, error: insertError } = await supabase
+      .from('contact_info')
+      .insert([{ ...info, updated_at: new Date().toISOString() }])
+      .select()
+      .single();
+
+    if (insertError) throw insertError;
+    return insertData as ContactInfo;
+  }
+
   const { data, error } = await supabase
     .from('contact_info')
     .update({ ...info, updated_at: new Date().toISOString() })
     .eq('id', info.id)
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error('Registro não encontrado');
   return data as ContactInfo;
 };
