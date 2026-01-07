@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, Video, MessageSquare, Save, Plus, Trash2, Eye, EyeOff, Link as LinkIcon } from 'lucide-react';
+import { Settings, Video, MessageSquare, Save, Plus, Trash2, Eye, EyeOff, Link as LinkIcon, Edit } from 'lucide-react';
 import {
   getSiteConfig,
   updateSiteConfig,
@@ -40,6 +40,11 @@ export default function AdminPanel() {
   const [newVideo, setNewVideo] = useState({ title: '', description: '', video_url: '', thumbnail_url: '' });
   const [newTestimonial, setNewTestimonial] = useState({ name: '', role: '', content: '', rating: 5, image_url: '', is_active: true });
   const [newFooterLink, setNewFooterLink] = useState({ section: 'Plataforma', title: '', url: '', order: 0, is_active: true });
+
+  const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
+  const [editingVideo, setEditingVideo] = useState<VideoType | null>(null);
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null);
+  const [editingLink, setEditingLink] = useState<FooterLink | null>(null);
 
   useEffect(() => {
     loadData();
@@ -124,6 +129,32 @@ export default function AdminPanel() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEditVideo = (video: VideoType) => {
+    setEditingVideoId(video.id);
+    setEditingVideo({ ...video });
+  };
+
+  const handleSaveVideo = async () => {
+    if (!editingVideo || !editingVideoId) return;
+    setLoading(true);
+    try {
+      await updateVideo(editingVideoId, editingVideo);
+      setVideos(videos.map(v => v.id === editingVideoId ? editingVideo : v));
+      setEditingVideoId(null);
+      setEditingVideo(null);
+      showMessage('Vídeo atualizado com sucesso!');
+    } catch (error) {
+      showMessage('Erro ao atualizar vídeo', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelEditVideo = () => {
+    setEditingVideoId(null);
+    setEditingVideo(null);
   };
 
   const handleAddTestimonial = async () => {
@@ -214,6 +245,32 @@ export default function AdminPanel() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEditLink = (link: FooterLink) => {
+    setEditingLinkId(link.id);
+    setEditingLink({ ...link });
+  };
+
+  const handleSaveLink = async () => {
+    if (!editingLink || !editingLinkId) return;
+    setLoading(true);
+    try {
+      await updateFooterLink(editingLinkId, editingLink);
+      setFooterLinks(footerLinks.map(l => l.id === editingLinkId ? editingLink : l));
+      setEditingLinkId(null);
+      setEditingLink(null);
+      showMessage('Link atualizado com sucesso!');
+    } catch (error) {
+      showMessage('Erro ao atualizar link', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelEditLink = () => {
+    setEditingLinkId(null);
+    setEditingLink(null);
   };
 
   const handleContactInfoSave = async () => {
@@ -414,19 +471,79 @@ export default function AdminPanel() {
 
               <div className="space-y-4">
                 {videos.map(video => (
-                  <div key={video.id} className="bg-gray-50 p-4 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900">{video.title}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{video.description}</p>
-                      <p className="text-xs text-gray-500 mt-2 truncate">{video.video_url}</p>
-                    </div>
-                    <button
-                      onClick={() => handleDeleteVideo(video.id)}
-                      className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Deletar
-                    </button>
+                  <div key={video.id} className="bg-gray-50 p-4 rounded-lg">
+                    {editingVideoId === video.id && editingVideo ? (
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          placeholder="Título do vídeo"
+                          value={editingVideo.title}
+                          onChange={(e) => setEditingVideo({ ...editingVideo, title: e.target.value })}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Descrição"
+                          value={editingVideo.description}
+                          onChange={(e) => setEditingVideo({ ...editingVideo, description: e.target.value })}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        />
+                        <input
+                          type="url"
+                          placeholder="URL do vídeo"
+                          value={editingVideo.video_url}
+                          onChange={(e) => setEditingVideo({ ...editingVideo, video_url: e.target.value })}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        />
+                        <input
+                          type="url"
+                          placeholder="URL da thumbnail"
+                          value={editingVideo.thumbnail_url}
+                          onChange={(e) => setEditingVideo({ ...editingVideo, thumbnail_url: e.target.value })}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            onClick={handleSaveVideo}
+                            disabled={loading}
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                          >
+                            <Save className="w-4 h-4" />
+                            Salvar
+                          </button>
+                          <button
+                            onClick={handleCancelEditVideo}
+                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900">{video.title}</h4>
+                          <p className="text-sm text-gray-600 mt-1">{video.description}</p>
+                          <p className="text-xs text-gray-500 mt-2 truncate">{video.video_url}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEditVideo(video)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all"
+                          >
+                            <Edit className="w-4 h-4" />
+                            Editar
+                          </button>
+                          <button
+                            onClick={() => handleDeleteVideo(video.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Deletar
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -675,32 +792,90 @@ export default function AdminPanel() {
                         <h3 className="font-bold text-lg mb-3">{section}</h3>
                         <div className="space-y-2">
                           {sectionLinks.map(link => (
-                            <div key={link.id} className="bg-gray-50 p-4 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">#{link.order}</span>
-                                  <h4 className="font-semibold text-gray-900">{link.title}</h4>
+                            <div key={link.id} className="bg-gray-50 p-4 rounded-lg">
+                              {editingLinkId === link.id && editingLink ? (
+                                <div className="space-y-3">
+                                  <select
+                                    value={editingLink.section}
+                                    onChange={(e) => setEditingLink({ ...editingLink, section: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                  >
+                                    <option value="Plataforma">Plataforma</option>
+                                    <option value="Empresa">Empresa</option>
+                                  </select>
+                                  <input
+                                    type="text"
+                                    placeholder="Título do link"
+                                    value={editingLink.title}
+                                    onChange={(e) => setEditingLink({ ...editingLink, title: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                  />
+                                  <input
+                                    type="url"
+                                    placeholder="URL do link"
+                                    value={editingLink.url}
+                                    onChange={(e) => setEditingLink({ ...editingLink, url: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                  />
+                                  <input
+                                    type="number"
+                                    placeholder="Ordem"
+                                    value={editingLink.order}
+                                    onChange={(e) => setEditingLink({ ...editingLink, order: parseInt(e.target.value) || 0 })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                  />
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={handleSaveLink}
+                                      disabled={loading}
+                                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                                    >
+                                      <Save className="w-4 h-4" />
+                                      Salvar
+                                    </button>
+                                    <button
+                                      onClick={handleCancelEditLink}
+                                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
+                                    >
+                                      Cancelar
+                                    </button>
+                                  </div>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-1 truncate">{link.url}</p>
-                              </div>
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={() => handleToggleFooterLink(link.id, link.is_active)}
-                                  className={`font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all ${
-                                    link.is_active
-                                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                                      : 'bg-gray-400 hover:bg-gray-500 text-white'
-                                  }`}
-                                >
-                                  {link.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteFooterLink(link.id)}
-                                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
+                              ) : (
+                                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">#{link.order}</span>
+                                      <h4 className="font-semibold text-gray-900">{link.title}</h4>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1 truncate">{link.url}</p>
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={() => handleToggleFooterLink(link.id, link.is_active)}
+                                      className={`font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all ${
+                                        link.is_active
+                                          ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                          : 'bg-gray-400 hover:bg-gray-500 text-white'
+                                      }`}
+                                    >
+                                      {link.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                    </button>
+                                    <button
+                                      onClick={() => handleEditLink(link)}
+                                      className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all"
+                                    >
+                                      <Edit className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteFooterLink(link.id)}
+                                      className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
