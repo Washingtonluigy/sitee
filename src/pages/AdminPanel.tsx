@@ -17,6 +17,7 @@ import {
   deleteFooterLink,
   getContactInfo,
   updateContactInfo,
+  uploadThumbnail,
   SiteConfig,
   Video as VideoType,
   Testimonial,
@@ -45,6 +46,9 @@ export default function AdminPanel() {
   const [editingVideo, setEditingVideo] = useState<VideoType | null>(null);
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null);
   const [editingLink, setEditingLink] = useState<FooterLink | null>(null);
+
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [editThumbnailFile, setEditThumbnailFile] = useState<File | null>(null);
 
   useEffect(() => {
     loadData();
@@ -104,11 +108,17 @@ export default function AdminPanel() {
       showMessage('Preencha título e URL do vídeo', 'error');
       return;
     }
+    if (!thumbnailFile) {
+      showMessage('Selecione uma imagem para a thumbnail', 'error');
+      return;
+    }
     setLoading(true);
     try {
-      const video = await addVideo({ ...newVideo, is_active: true });
+      const thumbnailUrl = await uploadThumbnail(thumbnailFile);
+      const video = await addVideo({ ...newVideo, thumbnail_url: thumbnailUrl, is_active: true });
       setVideos([video, ...videos]);
       setNewVideo({ title: '', description: '', video_url: '', thumbnail_url: '' });
+      setThumbnailFile(null);
       showMessage('Vídeo adicionado com sucesso!');
     } catch (error) {
       showMessage('Erro ao adicionar vídeo', 'error');
@@ -140,10 +150,18 @@ export default function AdminPanel() {
     if (!editingVideo || !editingVideoId) return;
     setLoading(true);
     try {
-      await updateVideo(editingVideoId, editingVideo);
-      setVideos(videos.map(v => v.id === editingVideoId ? editingVideo : v));
+      let updatedVideo = { ...editingVideo };
+
+      if (editThumbnailFile) {
+        const thumbnailUrl = await uploadThumbnail(editThumbnailFile);
+        updatedVideo = { ...updatedVideo, thumbnail_url: thumbnailUrl };
+      }
+
+      await updateVideo(editingVideoId, updatedVideo);
+      setVideos(videos.map(v => v.id === editingVideoId ? updatedVideo : v));
       setEditingVideoId(null);
       setEditingVideo(null);
+      setEditThumbnailFile(null);
       showMessage('Vídeo atualizado com sucesso!');
     } catch (error) {
       showMessage('Erro ao atualizar vídeo', 'error');
@@ -155,6 +173,7 @@ export default function AdminPanel() {
   const handleCancelEditVideo = () => {
     setEditingVideoId(null);
     setEditingVideo(null);
+    setEditThumbnailFile(null);
   };
 
   const handleAddTestimonial = async () => {
@@ -452,13 +471,24 @@ export default function AdminPanel() {
                   onChange={(e) => setNewVideo({ ...newVideo, video_url: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                 />
-                <input
-                  type="url"
-                  placeholder="URL da thumbnail (opcional)"
-                  value={newVideo.thumbnail_url}
-                  onChange={(e) => setNewVideo({ ...newVideo, thumbnail_url: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Thumbnail do vídeo</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  {thumbnailFile && (
+                    <div className="mt-2">
+                      <img
+                        src={URL.createObjectURL(thumbnailFile)}
+                        alt="Preview"
+                        className="w-full h-40 object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={handleAddVideo}
                   disabled={loading}
@@ -495,13 +525,32 @@ export default function AdminPanel() {
                           onChange={(e) => setEditingVideo({ ...editingVideo, video_url: e.target.value })}
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                         />
-                        <input
-                          type="url"
-                          placeholder="URL da thumbnail"
-                          value={editingVideo.thumbnail_url}
-                          onChange={(e) => setEditingVideo({ ...editingVideo, thumbnail_url: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                        />
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Nova Thumbnail (opcional)</label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setEditThumbnailFile(e.target.files?.[0] || null)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                          />
+                          {editThumbnailFile ? (
+                            <div className="mt-2">
+                              <img
+                                src={URL.createObjectURL(editThumbnailFile)}
+                                alt="Preview"
+                                className="w-full h-40 object-cover rounded-lg"
+                              />
+                            </div>
+                          ) : editingVideo.thumbnail_url ? (
+                            <div className="mt-2">
+                              <img
+                                src={editingVideo.thumbnail_url}
+                                alt="Thumbnail atual"
+                                className="w-full h-40 object-cover rounded-lg"
+                              />
+                            </div>
+                          ) : null}
+                        </div>
                         <div className="flex gap-2">
                           <button
                             onClick={handleSaveVideo}
@@ -520,11 +569,20 @@ export default function AdminPanel() {
                         </div>
                       </div>
                     ) : (
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900">{video.title}</h4>
-                          <p className="text-sm text-gray-600 mt-1">{video.description}</p>
-                          <p className="text-xs text-gray-500 mt-2 truncate">{video.video_url}</p>
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        <div className="flex gap-4 flex-1">
+                          {video.thumbnail_url && (
+                            <img
+                              src={video.thumbnail_url}
+                              alt={video.title}
+                              className="w-32 h-20 object-cover rounded-lg"
+                            />
+                          )}
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-gray-900">{video.title}</h4>
+                            <p className="text-sm text-gray-600 mt-1">{video.description}</p>
+                            <p className="text-xs text-gray-500 mt-2 truncate">{video.video_url}</p>
+                          </div>
                         </div>
                         <div className="flex gap-2">
                           <button

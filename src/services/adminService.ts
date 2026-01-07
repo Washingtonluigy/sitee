@@ -137,6 +137,44 @@ export const deleteVideo = async (id: string) => {
   if (error) throw error;
 };
 
+export const uploadThumbnail = async (file: File): Promise<string> => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+  const filePath = fileName;
+
+  const { error: uploadError } = await supabase.storage
+    .from('video-thumbnails')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('video-thumbnails')
+    .getPublicUrl(filePath);
+
+  return publicUrl;
+};
+
+export const deleteThumbnail = async (url: string) => {
+  if (!isSupabaseConfigured || !supabase) return;
+
+  try {
+    const fileName = url.split('/').pop();
+    if (!fileName) return;
+
+    await supabase.storage
+      .from('video-thumbnails')
+      .remove([fileName]);
+  } catch (error) {
+    console.error('Error deleting thumbnail:', error);
+  }
+};
+
 export const getTestimonials = async () => {
   if (!isSupabaseConfigured || !supabase) return [];
 
