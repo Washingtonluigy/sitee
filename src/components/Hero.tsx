@@ -72,7 +72,7 @@ export default function Hero() {
           <span className="text-sm font-medium text-gray-700">Conectando você aos melhores profissionais de saúde</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight" translate="no">
           {config?.hero_title || 'Sua saúde merece'}
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-500">
             {config?.hero_subtitle || 'atenção especializada'}
