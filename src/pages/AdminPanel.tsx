@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, Video, MessageSquare, Save, Plus, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Settings, Video, MessageSquare, Save, Plus, Trash2, Eye, EyeOff, Link as LinkIcon } from 'lucide-react';
 import {
   getSiteConfig,
   updateSiteConfig,
@@ -11,12 +11,20 @@ import {
   addTestimonial,
   updateTestimonial,
   deleteTestimonial,
+  getFooterLinks,
+  addFooterLink,
+  updateFooterLink,
+  deleteFooterLink,
+  getContactInfo,
+  updateContactInfo,
   SiteConfig,
   Video as VideoType,
   Testimonial,
+  FooterLink,
+  ContactInfo,
 } from '../services/adminService';
 
-type TabType = 'config' | 'videos' | 'testimonials';
+type TabType = 'config' | 'videos' | 'testimonials' | 'footer';
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<TabType>('config');
@@ -26,9 +34,12 @@ export default function AdminPanel() {
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [videos, setVideos] = useState<VideoType[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [footerLinks, setFooterLinks] = useState<FooterLink[]>([]);
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
 
   const [newVideo, setNewVideo] = useState({ title: '', description: '', video_url: '', thumbnail_url: '' });
   const [newTestimonial, setNewTestimonial] = useState({ name: '', role: '', content: '', rating: 5, image_url: '', is_active: true });
+  const [newFooterLink, setNewFooterLink] = useState({ section: 'Plataforma', title: '', url: '', order: 0, is_active: true });
 
   useEffect(() => {
     loadData();
@@ -36,14 +47,18 @@ export default function AdminPanel() {
 
   const loadData = async () => {
     try {
-      const [configData, videosData, testimonialsData] = await Promise.all([
+      const [configData, videosData, testimonialsData, footerLinksData, contactInfoData] = await Promise.all([
         getSiteConfig(),
         getVideos(),
         getAllTestimonials(),
+        getFooterLinks(),
+        getContactInfo(),
       ]);
       setConfig(configData);
       setVideos(videosData);
       setTestimonials(testimonialsData);
+      setFooterLinks(footerLinksData);
+      setContactInfo(contactInfoData);
     } catch (error) {
       showMessage('Erro ao carregar dados', 'error');
     }
@@ -144,6 +159,64 @@ export default function AdminPanel() {
     }
   };
 
+  const handleAddFooterLink = async () => {
+    if (!newFooterLink.title || !newFooterLink.url) {
+      showMessage('Preencha título e URL do link', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      const link = await addFooterLink(newFooterLink);
+      setFooterLinks([...footerLinks, link]);
+      setNewFooterLink({ section: 'Plataforma', title: '', url: '', order: 0, is_active: true });
+      showMessage('Link adicionado com sucesso!');
+    } catch (error) {
+      showMessage('Erro ao adicionar link', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleFooterLink = async (id: string, isActive: boolean) => {
+    setLoading(true);
+    try {
+      await updateFooterLink(id, { is_active: !isActive });
+      setFooterLinks(footerLinks.map(l => l.id === id ? { ...l, is_active: !isActive } : l));
+      showMessage(`Link ${!isActive ? 'ativado' : 'desativado'}!`);
+    } catch (error) {
+      showMessage('Erro ao atualizar link', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteFooterLink = async (id: string) => {
+    if (!confirm('Tem certeza que deseja deletar este link?')) return;
+    setLoading(true);
+    try {
+      await deleteFooterLink(id);
+      setFooterLinks(footerLinks.filter(l => l.id !== id));
+      showMessage('Link deletado com sucesso!');
+    } catch (error) {
+      showMessage('Erro ao deletar link', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContactInfoSave = async () => {
+    if (!contactInfo) return;
+    setLoading(true);
+    try {
+      await updateContactInfo(contactInfo);
+      showMessage('Informações de contato salvas com sucesso!');
+    } catch (error) {
+      showMessage('Erro ao salvar informações de contato', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
@@ -163,6 +236,7 @@ export default function AdminPanel() {
             { id: 'config', label: 'Configurações', icon: Settings },
             { id: 'videos', label: 'Vídeos', icon: Video },
             { id: 'testimonials', label: 'Depoimentos', icon: MessageSquare },
+            { id: 'footer', label: 'Footer & Contato', icon: LinkIcon },
           ].map(tab => {
             const Icon = tab.icon;
             return (
@@ -435,6 +509,191 @@ export default function AdminPanel() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'footer' && contactInfo && (
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Informações de Contato</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <input
+                      type="email"
+                      value={contactInfo.email}
+                      onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Telefone</label>
+                    <input
+                      type="text"
+                      value={contactInfo.phone}
+                      onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Endereço</label>
+                    <input
+                      type="text"
+                      value={contactInfo.address}
+                      onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Cidade</label>
+                    <input
+                      type="text"
+                      value={contactInfo.city}
+                      onChange={(e) => setContactInfo({ ...contactInfo, city: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Estado</label>
+                    <input
+                      type="text"
+                      value={contactInfo.state}
+                      onChange={(e) => setContactInfo({ ...contactInfo, state: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">País</label>
+                    <input
+                      type="text"
+                      value={contactInfo.country}
+                      onChange={(e) => setContactInfo({ ...contactInfo, country: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">URL Termos de Uso</label>
+                    <input
+                      type="url"
+                      value={contactInfo.terms_url}
+                      onChange={(e) => setContactInfo({ ...contactInfo, terms_url: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">URL Política de Privacidade</label>
+                    <input
+                      type="url"
+                      value={contactInfo.privacy_url}
+                      onChange={(e) => setContactInfo({ ...contactInfo, privacy_url: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">URL Política de Cookies</label>
+                    <input
+                      type="url"
+                      value={contactInfo.cookies_url}
+                      onChange={(e) => setContactInfo({ ...contactInfo, cookies_url: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    />
+                  </div>
+                </div>
+                <button
+                  onClick={handleContactInfoSave}
+                  disabled={loading}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                >
+                  <Save className="w-5 h-5" />
+                  {loading ? 'Salvando...' : 'Salvar Informações de Contato'}
+                </button>
+              </div>
+
+              <div className="border-t pt-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Links do Footer</h2>
+                <div className="bg-gray-50 p-6 rounded-lg space-y-4 mb-6">
+                  <h3 className="font-semibold text-gray-900">Adicionar Novo Link</h3>
+                  <select
+                    value={newFooterLink.section}
+                    onChange={(e) => setNewFooterLink({ ...newFooterLink, section: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  >
+                    <option value="Plataforma">Plataforma</option>
+                    <option value="Empresa">Empresa</option>
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Título do link"
+                    value={newFooterLink.title}
+                    onChange={(e) => setNewFooterLink({ ...newFooterLink, title: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <input
+                    type="url"
+                    placeholder="URL do link"
+                    value={newFooterLink.url}
+                    onChange={(e) => setNewFooterLink({ ...newFooterLink, url: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Ordem (0 = primeiro)"
+                    value={newFooterLink.order}
+                    onChange={(e) => setNewFooterLink({ ...newFooterLink, order: parseInt(e.target.value) || 0 })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  <button
+                    onClick={handleAddFooterLink}
+                    disabled={loading}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Adicionar Link
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {['Plataforma', 'Empresa'].map(section => {
+                    const sectionLinks = footerLinks.filter(l => l.section === section);
+                    return (
+                      <div key={section}>
+                        <h3 className="font-bold text-lg mb-3">{section}</h3>
+                        <div className="space-y-2">
+                          {sectionLinks.map(link => (
+                            <div key={link.id} className="bg-gray-50 p-4 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">#{link.order}</span>
+                                  <h4 className="font-semibold text-gray-900">{link.title}</h4>
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1 truncate">{link.url}</p>
+                              </div>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleToggleFooterLink(link.id, link.is_active)}
+                                  className={`font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all ${
+                                    link.is_active
+                                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                      : 'bg-gray-400 hover:bg-gray-500 text-white'
+                                  }`}
+                                >
+                                  {link.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteFooterLink(link.id)}
+                                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}

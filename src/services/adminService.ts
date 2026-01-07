@@ -36,6 +36,31 @@ export interface Testimonial {
   updated_at: string;
 }
 
+export interface FooterLink {
+  id: string;
+  section: string;
+  title: string;
+  url: string;
+  order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContactInfo {
+  id: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  terms_url: string;
+  privacy_url: string;
+  cookies_url: string;
+  updated_at: string;
+}
+
 export const getSiteConfig = async () => {
   if (!isSupabaseConfigured || !supabase) return null;
 
@@ -173,4 +198,81 @@ export const deleteTestimonial = async (id: string) => {
     .eq('id', id);
 
   if (error) throw error;
+};
+
+export const getFooterLinks = async () => {
+  if (!isSupabaseConfigured || !supabase) return [];
+
+  const { data, error } = await supabase
+    .from('footer_links')
+    .select('*')
+    .order('section', { ascending: true })
+    .order('order', { ascending: true });
+
+  if (error) throw error;
+  return data as FooterLink[];
+};
+
+export const addFooterLink = async (link: Omit<FooterLink, 'id' | 'created_at' | 'updated_at'>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
+  const { data, error } = await supabase
+    .from('footer_links')
+    .insert([link])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as FooterLink;
+};
+
+export const updateFooterLink = async (id: string, link: Partial<FooterLink>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
+  const { data, error } = await supabase
+    .from('footer_links')
+    .update({ ...link, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as FooterLink;
+};
+
+export const deleteFooterLink = async (id: string) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
+  const { error } = await supabase
+    .from('footer_links')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
+};
+
+export const getContactInfo = async () => {
+  if (!isSupabaseConfigured || !supabase) return null;
+
+  const { data, error } = await supabase
+    .from('contact_info')
+    .select('*')
+    .maybeSingle();
+
+  if (error) throw error;
+  return data as ContactInfo | null;
+};
+
+export const updateContactInfo = async (info: Partial<ContactInfo>) => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
+  const { data, error } = await supabase
+    .from('contact_info')
+    .update({ ...info, updated_at: new Date().toISOString() })
+    .eq('id', info.id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as ContactInfo;
 };

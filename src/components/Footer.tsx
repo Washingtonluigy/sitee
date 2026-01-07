@@ -1,6 +1,33 @@
+import { useState, useEffect } from 'react';
 import { Heart, Mail, MapPin, Phone, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { getFooterLinks, getContactInfo, FooterLink, ContactInfo } from '../services/adminService';
 
 export default function Footer() {
+  const [footerLinks, setFooterLinks] = useState<FooterLink[]>([]);
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [links, contact] = await Promise.all([
+          getFooterLinks(),
+          getContactInfo(),
+        ]);
+        setFooterLinks(links.filter(l => l.is_active));
+        setContactInfo(contact);
+      } catch (error) {
+        console.error('Erro ao carregar dados do footer:', error);
+      }
+    };
+    loadData();
+  }, []);
+
+  const getLinksBySection = (section: string) => {
+    return footerLinks
+      .filter(link => link.section === section)
+      .sort((a, b) => a.order - b.order);
+  };
+
   return (
     <footer className="bg-purple-900 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
@@ -34,40 +61,54 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold text-base md:text-lg mb-3 md:mb-4">Plataforma</h3>
             <ul className="space-y-2 md:space-y-3 text-xs md:text-sm">
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Como Funciona</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Para Pacientes</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Para Profissionais</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Especialidades</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Depoimentos</a></li>
+              {getLinksBySection('Plataforma').map(link => (
+                <li key={link.id}>
+                  <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = link.url; }} className="hover:text-purple-400 transition-colors">
+                    {link.title}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-bold text-base md:text-lg mb-3 md:mb-4">Empresa</h3>
             <ul className="space-y-2 md:space-y-3 text-xs md:text-sm">
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Sobre Nós</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Blog</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Carreira</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Imprensa</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Parceiros</a></li>
+              {getLinksBySection('Empresa').map(link => (
+                <li key={link.id}>
+                  <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = link.url; }} className="hover:text-purple-400 transition-colors">
+                    {link.title}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-bold text-base md:text-lg mb-3 md:mb-4">Contato</h3>
             <ul className="space-y-3 md:space-y-4 text-xs md:text-sm">
-              <li className="flex items-start gap-2 md:gap-3">
-                <Mail className="w-4 md:w-5 h-4 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <span>contato@amah.com.br</span>
-              </li>
-              <li className="flex items-start gap-2 md:gap-3">
-                <Phone className="w-4 md:w-5 h-4 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <span>(11) 4000-0000</span>
-              </li>
-              <li className="flex items-start gap-2 md:gap-3">
-                <MapPin className="w-4 md:w-5 h-4 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-                <span className="text-xs md:text-sm">São Paulo, SP<br />Brasil</span>
-              </li>
+              {contactInfo?.email && (
+                <li className="flex items-start gap-2 md:gap-3">
+                  <Mail className="w-4 md:w-5 h-4 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span>{contactInfo.email}</span>
+                </li>
+              )}
+              {contactInfo?.phone && (
+                <li className="flex items-start gap-2 md:gap-3">
+                  <Phone className="w-4 md:w-5 h-4 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span>{contactInfo.phone}</span>
+                </li>
+              )}
+              {(contactInfo?.city || contactInfo?.state || contactInfo?.country) && (
+                <li className="flex items-start gap-2 md:gap-3">
+                  <MapPin className="w-4 md:w-5 h-4 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-xs md:text-sm">
+                    {contactInfo.address && <>{contactInfo.address}<br /></>}
+                    {contactInfo.city}{contactInfo.state && `, ${contactInfo.state}`}<br />
+                    {contactInfo.country}
+                  </span>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -78,9 +119,15 @@ export default function Footer() {
               © 2024 Amah. Todos os direitos reservados.
             </p>
             <div className="flex gap-4 md:gap-6 text-xs md:text-sm flex-wrap justify-center">
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Termos de Uso</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Política de Privacidade</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="hover:text-purple-400 transition-colors">Cookies</a>
+              {contactInfo?.terms_url && (
+                <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = contactInfo.terms_url; }} className="hover:text-purple-400 transition-colors">Termos de Uso</a>
+              )}
+              {contactInfo?.privacy_url && (
+                <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = contactInfo.privacy_url; }} className="hover:text-purple-400 transition-colors">Política de Privacidade</a>
+              )}
+              {contactInfo?.cookies_url && (
+                <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = contactInfo.cookies_url; }} className="hover:text-purple-400 transition-colors">Cookies</a>
+              )}
             </div>
           </div>
         </div>
