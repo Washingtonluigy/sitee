@@ -103,7 +103,9 @@ export default function Hero() {
             <div className="text-xs sm:text-sm text-gray-600">Categorias</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600 mb-1 md:mb-2">4.9★</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 md:mb-2">
+              <span className="text-purple-600">4.9</span><span className="text-yellow-500">★</span>
+            </div>
             <div className="text-xs sm:text-sm text-gray-600">Avaliação</div>
           </div>
         </div>
