@@ -238,6 +238,29 @@ export const deleteTestimonial = async (id: string) => {
   if (error) throw error;
 };
 
+export const uploadTestimonialImage = async (file: File): Promise<string> => {
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+  const filePath = fileName;
+
+  const { error: uploadError } = await supabase.storage
+    .from('testimonial-images')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('testimonial-images')
+    .getPublicUrl(filePath);
+
+  return publicUrl;
+};
+
 export const getFooterLinks = async () => {
   if (!isSupabaseConfigured || !supabase) return [];
 

@@ -18,6 +18,7 @@ import {
   getContactInfo,
   updateContactInfo,
   uploadThumbnail,
+  uploadTestimonialImage,
   SiteConfig,
   Video as VideoType,
   Testimonial,
@@ -49,6 +50,7 @@ export default function AdminPanel() {
 
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [editThumbnailFile, setEditThumbnailFile] = useState<File | null>(null);
+  const [testimonialImageFile, setTestimonialImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     loadData();
@@ -183,9 +185,14 @@ export default function AdminPanel() {
     }
     setLoading(true);
     try {
-      const testimonial = await addTestimonial(newTestimonial);
+      let imageUrl = '';
+      if (testimonialImageFile) {
+        imageUrl = await uploadTestimonialImage(testimonialImageFile);
+      }
+      const testimonial = await addTestimonial({ ...newTestimonial, image_url: imageUrl });
       setTestimonials([testimonial, ...testimonials]);
       setNewTestimonial({ name: '', role: '', content: '', rating: 5, image_url: '', is_active: true });
+      setTestimonialImageFile(null);
       showMessage('Depoimento adicionado com sucesso!');
     } catch (error) {
       showMessage('Erro ao adicionar depoimento', 'error');
@@ -634,13 +641,24 @@ export default function AdminPanel() {
                   onChange={(e) => setNewTestimonial({ ...newTestimonial, content: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 h-24"
                 />
-                <input
-                  type="url"
-                  placeholder="URL da foto"
-                  value={newTestimonial.image_url}
-                  onChange={(e) => setNewTestimonial({ ...newTestimonial, image_url: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                />
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Foto do depoente (opcional)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setTestimonialImageFile(e.target.files?.[0] || null)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                  {testimonialImageFile && (
+                    <div className="mt-2">
+                      <img
+                        src={URL.createObjectURL(testimonialImageFile)}
+                        alt="Preview"
+                        className="w-24 h-24 object-cover rounded-full mx-auto"
+                      />
+                    </div>
+                  )}
+                </div>
                 <select
                   value={newTestimonial.rating}
                   onChange={(e) => setNewTestimonial({ ...newTestimonial, rating: parseInt(e.target.value) })}
