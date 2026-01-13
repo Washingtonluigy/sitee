@@ -17,6 +17,8 @@ export default function VideoModal({ video, isOpen, onClose }: VideoModalProps) 
       let videoId = '';
       if (url.includes('youtu.be')) {
         videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      } else if (url.includes('/shorts/')) {
+        videoId = url.split('/shorts/')[1]?.split('?')[0];
       } else {
         videoId = new URLSearchParams(new URL(url).search).get('v') || url.split('v=')[1]?.split('&')[0];
       }
