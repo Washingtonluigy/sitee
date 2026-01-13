@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Play } from 'lucide-react';
-import { getVideos } from '../services/adminService';
+import { getVideos, Video } from '../services/adminService';
 import VideoModal from './VideoModal';
 
 export default function VideoSection() {
-  const [videos, setVideos] = useState<any[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
   useEffect(() => {
     loadVideos();
@@ -40,7 +40,7 @@ export default function VideoSection() {
           </div>
 
           <div
-            onClick={() => setSelectedVideo(mainVideo.video_url)}
+            onClick={() => setSelectedVideo(mainVideo)}
             className="relative rounded-3xl overflow-hidden shadow-2xl group cursor-pointer"
           >
             {mainVideo.thumbnail_url ? (
@@ -85,7 +85,7 @@ export default function VideoSection() {
               {videos.slice(1, 4).map((video) => (
                 <div
                   key={video.id}
-                  onClick={() => setSelectedVideo(video.video_url)}
+                  onClick={() => setSelectedVideo(video)}
                   className="relative rounded-xl overflow-hidden shadow-lg group cursor-pointer"
                 >
                   {video.thumbnail_url ? (
@@ -118,9 +118,9 @@ export default function VideoSection() {
       </section>
 
       <VideoModal
+        video={selectedVideo}
         isOpen={selectedVideo !== null}
         onClose={() => setSelectedVideo(null)}
-        videoUrl={selectedVideo || ''}
       />
     </>
   );
