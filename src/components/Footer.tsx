@@ -43,16 +43,16 @@ export default function Footer() {
               Conectando você aos melhores profissionais de saúde com tecnologia, segurança e humanização.
             </p>
             <div className="flex gap-2 md:gap-3">
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
+              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amahsistema.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
                 <Facebook className="w-4 md:w-5 h-4 md:h-5" />
               </a>
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
+              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amahsistema.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
                 <Instagram className="w-4 md:w-5 h-4 md:h-5" />
               </a>
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
+              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amahsistema.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
                 <Linkedin className="w-4 md:w-5 h-4 md:h-5" />
               </a>
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amah-sistema-de-saude.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
+              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = 'https://amahsistema.netlify.app'; }} className="w-9 md:w-10 h-9 md:h-10 bg-gray-700 hover:bg-purple-600 rounded-lg flex items-center justify-center transition-colors">
                 <Twitter className="w-4 md:w-5 h-4 md:h-5" />
               </a>
             </div>

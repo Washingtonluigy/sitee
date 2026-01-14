@@ -2,7 +2,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 
 export default function CTA() {
   const handleClick = () => {
-    window.location.href = 'https://amah-sistema-de-saude.netlify.app';
+    window.location.href = 'https://amahsistema.netlify.app';
   };
 
   return (
