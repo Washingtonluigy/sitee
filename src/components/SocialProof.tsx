@@ -24,7 +24,7 @@ export default function SocialProof() {
     <section className="py-12 md:py-16 bg-gradient-to-br from-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="text-center mb-10 md:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2" translate="no">
             Quem já usa a Amah
           </h2>
         </div>
@@ -43,7 +43,7 @@ export default function SocialProof() {
                 ))}
               </div>
 
-              <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4 md:mb-6">
+              <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4 md:mb-6" translate="no">
                 "{testimonial.content}"
               </p>
 
@@ -56,8 +56,8 @@ export default function SocialProof() {
                   />
                 )}
                 <div className="min-w-0">
-                  <div className="font-bold text-gray-900 text-sm md:text-base truncate">{testimonial.name}</div>
-                  <div className="text-xs md:text-sm text-gray-500 truncate">{testimonial.role}</div>
+                  <div className="font-bold text-gray-900 text-sm md:text-base truncate" translate="no">{testimonial.name}</div>
+                  <div className="text-xs md:text-sm text-gray-500 truncate" translate="no">{testimonial.role}</div>
                 </div>
               </div>
             </div>
@@ -66,16 +66,16 @@ export default function SocialProof() {
 
         <div className="mt-10 grid grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto px-4">
           <div className="text-center p-4 bg-white rounded-xl shadow">
-            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-600 mb-1">98%</div>
-            <div className="text-xs text-gray-600">Satisfação</div>
+            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-600 mb-1" translate="no">98%</div>
+            <div className="text-xs text-gray-600" translate="no">Satisfação</div>
           </div>
           <div className="text-center p-4 bg-white rounded-xl shadow">
-            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-600 mb-1">500+</div>
-            <div className="text-xs text-gray-600">Profissionais</div>
+            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-600 mb-1" translate="no">500+</div>
+            <div className="text-xs text-gray-600" translate="no">Profissionais</div>
           </div>
           <div className="text-center p-4 bg-white rounded-xl shadow">
-            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-600 mb-1">10k+</div>
-            <div className="text-xs text-gray-600">Atendimentos</div>
+            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-600 mb-1" translate="no">10k+</div>
+            <div className="text-xs text-gray-600" translate="no">Atendimentos</div>
           </div>
         </div>
       </div>

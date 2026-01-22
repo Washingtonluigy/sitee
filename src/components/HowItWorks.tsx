@@ -28,10 +28,10 @@ export default function HowItWorks() {
     <section className="py-16 md:py-24 bg-gradient-to-br from-teal-50 via-blue-50 to-cyan-50">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4" translate="no">
             Como funciona?
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4" translate="no">
             Em apenas 4 passos simples, você está conectado ao cuidado profissional
           </p>
         </div>
@@ -53,10 +53,10 @@ export default function HowItWorks() {
                     </div>
                   </div>
 
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3" translate="no">
                     {step.title}
                   </h3>
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed" translate="no">
                     {step.description}
                   </p>
                 </div>
