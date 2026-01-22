@@ -56,12 +56,12 @@ export default function Hero() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-yellow-400/10 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
       </div>
 
-      <nav className="absolute top-0 left-0 right-0 z-20 px-4 md:px-6 py-4 md:py-6">
+      <nav className="absolute top-0 left-0 right-0 z-20 px-4 md:px-6 py-3 md:py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <button onClick={handleNavClick} className="px-4 md:px-6 py-2 md:py-2.5 bg-red-600 text-white rounded-lg font-semibold text-sm md:text-base hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 hover:shadow-xl hover:shadow-red-600/30" translate="no">
+          <button onClick={handleNavClick} className="px-3 md:px-4 py-1.5 md:py-2 bg-red-600 text-white rounded-lg font-semibold text-xs md:text-sm hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 hover:shadow-xl hover:shadow-red-600/30" translate="no">
             Cadastro de Profissional
           </button>
-          <button onClick={handleNavClick} className="px-4 md:px-6 py-2 md:py-2.5 bg-purple-600 text-white rounded-lg font-semibold text-sm md:text-base hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/20 hover:shadow-xl hover:shadow-purple-600/30" translate="no">
+          <button onClick={handleNavClick} className="px-3 md:px-4 py-1.5 md:py-2 bg-purple-600 text-white rounded-lg font-semibold text-xs md:text-sm hover:bg-purple-700 transition-all shadow-lg shadow-purple-600/20 hover:shadow-xl hover:shadow-purple-600/30" translate="no">
             {config?.button_primary_text || 'Começar Agora'}
           </button>
         </div>
