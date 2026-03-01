@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, Video, MessageSquare, Save, Plus, Trash2, Eye, EyeOff, Link as LinkIcon, Edit } from 'lucide-react';
+import { Settings, Video, MessageSquare, Save, Plus, Trash2, Eye, EyeOff, Link as LinkIcon, Edit, FileText } from 'lucide-react';
 import {
   getSiteConfig,
   updateSiteConfig,
@@ -25,11 +25,12 @@ import {
   FooterLink,
   ContactInfo,
 } from '../services/adminService';
+import ContentEditor from './admin/ContentEditor';
 
-type TabType = 'config' | 'videos' | 'testimonials' | 'footer';
+type TabType = 'content' | 'config' | 'videos' | 'testimonials' | 'footer';
 
 export default function AdminPanel() {
-  const [activeTab, setActiveTab] = useState<TabType>('config');
+  const [activeTab, setActiveTab] = useState<TabType>('content');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -330,6 +331,7 @@ export default function AdminPanel() {
 
         <div className="flex flex-wrap gap-2 mb-8 bg-white rounded-lg shadow p-2">
           {[
+            { id: 'content', label: 'Conteúdo do Site', icon: FileText },
             { id: 'config', label: 'Configurações', icon: Settings },
             { id: 'videos', label: 'Vídeos', icon: Video },
             { id: 'testimonials', label: 'Depoimentos', icon: MessageSquare },
@@ -353,8 +355,11 @@ export default function AdminPanel() {
           })}
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
-          {activeTab === 'config' && config && (
+        {activeTab === 'content' ? (
+          <ContentEditor />
+        ) : (
+          <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
+            {activeTab === 'config' && config && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Configurações do Site</h2>
 
@@ -962,7 +967,8 @@ export default function AdminPanel() {
               </div>
             </div>
           )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
