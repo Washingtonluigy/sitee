@@ -40,11 +40,11 @@ export default function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 lg:space-y-8">
-            <div className="flex flex-col items-center lg:items-start gap-6 lg:gap-4">
+            <div className="flex flex-col items-center gap-4">
               <img
                 src={config?.logo_url || logoAmah}
                 alt="Amah"
-                className="w-48 md:w-56 lg:w-64 xl:w-80 h-auto"
+                className="w-48 md:w-56 lg:w-72 xl:w-96 h-auto"
               />
               <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
                 <span className="text-sm md:text-base font-medium text-[#783DAC]" translate="no">
@@ -53,15 +53,15 @@ export default function Hero() {
               </div>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight text-center lg:text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight text-center">
               O cuidado que você precisa, <span className="text-[#783DAC]">onde você estiver.</span>
             </h1>
 
-            <p className="text-base md:text-lg text-gray-600 leading-relaxed text-center lg:text-left">
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed text-center">
               Conectamos você aos melhores profissionais de saúde para atendimento domiciliar, clínico ou presencial. Simples, rápido e eficiente.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handlePrimaryClick}
                 className="px-8 py-4 bg-[#783DAC] text-white rounded-lg font-semibold text-lg hover:bg-[#6a34a0] transition-all shadow-lg hover:shadow-xl"
