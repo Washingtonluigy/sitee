@@ -39,25 +39,29 @@ export default function Hero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="flex flex-col items-start gap-4">
-              <img src={config?.logo_url || logoAmah} alt="Amah" className="w-32 md:w-40 h-auto" />
-              <div className="inline-block bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
-                <span className="text-sm font-medium text-[#783DAC]" translate="no">
+          <div className="space-y-6 lg:space-y-8">
+            <div className="flex flex-col items-center lg:items-start gap-6 lg:gap-4">
+              <img
+                src={config?.logo_url || logoAmah}
+                alt="Amah"
+                className="w-48 md:w-56 lg:w-64 xl:w-80 h-auto"
+              />
+              <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
+                <span className="text-sm md:text-base font-medium text-[#783DAC]" translate="no">
                   🏥 PLATAFORMA DE PROFISSIONAIS DA SAÚDE
                 </span>
               </div>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight text-center lg:text-left">
               O cuidado que você precisa, <span className="text-[#783DAC]">onde você estiver.</span>
             </h1>
 
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed text-center lg:text-left">
               Conectamos você aos melhores profissionais de saúde para atendimento domiciliar, clínico ou presencial. Simples, rápido e eficiente.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button
                 onClick={handlePrimaryClick}
                 className="px-8 py-4 bg-[#783DAC] text-white rounded-lg font-semibold text-lg hover:bg-[#6a34a0] transition-all shadow-lg hover:shadow-xl"
@@ -75,7 +79,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative lg:order-last">
             <div className="absolute -inset-4 bg-gradient-to-r from-[#783DAC]/20 to-[#FAA900]/20 rounded-2xl blur-2xl"></div>
             <img
               src={heroImage}
