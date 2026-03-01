@@ -1,8 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Hero from './components/Hero';
-import Features from './components/Features';
-import SocialProof from './components/SocialProof';
-import CTA from './components/CTA';
+import UserTypeSelection from './components/UserTypeSelection';
+import SimpleSteps from './components/SimpleSteps';
+import Specialties from './components/Specialties';
+import Transparency from './components/Transparency';
+import ValidationSection from './components/ValidationSection';
+import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 import AdminPanel from './pages/AdminPanel';
 import WhatsAppButton from './components/WhatsAppButton';
@@ -11,9 +14,12 @@ function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Hero />
-      <Features />
-      <SocialProof />
-      <CTA />
+      <UserTypeSelection />
+      <SimpleSteps />
+      <Specialties />
+      <Transparency />
+      <ValidationSection />
+      <FinalCTA />
       <Footer />
     </div>
   );
