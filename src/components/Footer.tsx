@@ -31,6 +31,15 @@ export default function Footer() {
   return (
     <footer className="bg-purple-900 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+        <div className="mb-10 md:mb-14 pb-10 md:pb-14 border-b border-gray-700">
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
+            A Segurança de contar com profissionais validados e capacitados.
+          </h3>
+          <p className="text-sm md:text-base text-gray-300 leading-relaxed max-w-4xl">
+            Na Amah, todos os profissionais de enfermagem, prestadores de serviços, são validados e reconhecidos junto ao COREN de suas respectivas regionais, trazendo maior segurança e eficiência para as suas necessidades de cuidados em seu lar.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-8 md:mb-12">
           <div>
             <div className="flex items-center gap-2 mb-4">
