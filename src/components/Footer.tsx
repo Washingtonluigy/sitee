@@ -36,7 +36,7 @@ export default function Footer() {
             A Segurança de contar com profissionais validados e capacitados.
           </h3>
           <p className="text-sm md:text-base text-gray-300 leading-relaxed max-w-4xl">
-            Na Amah, todos os profissionais de enfermagem, prestadores de serviços, são validados e reconhecidos junto ao COREN de suas respectivas regionais, trazendo maior segurança e eficiência para as suas necessidades de cuidados em seu lar.
+            Na Amah, todos os profissionais de enfermagem, prestadores de serviços, são validados e reconhecidos junto ao conselho de suas respectivas regionais, trazendo maior segurança e eficiência para as suas necessidades de cuidados em seu lar.
           </p>
         </div>
 
